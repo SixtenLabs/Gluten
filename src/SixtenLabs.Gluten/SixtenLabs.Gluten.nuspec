@@ -11,8 +11,8 @@
     <iconUrl>https://github.com/SixtenLabs/Gluten/blob/master/Resources/noun_960_cc.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
-    <releaseNotes>Summary of changes made in this release of the package.</releaseNotes>
+    <releaseNotes>Initial Release.</releaseNotes>
     <copyright>Copyright 2015</copyright>
-    <tags>Tag1 Tag2</tags>
+    <tags>WPF MVVM Framework</tags>
   </metadata>
 </package>
