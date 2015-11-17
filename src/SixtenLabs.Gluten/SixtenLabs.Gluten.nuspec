@@ -8,7 +8,7 @@
     <owners>$author$</owners>
     <licenseUrl>https://github.com/SixtenLabs/Gluten/blob/master/LICENSE</licenseUrl>
     <projectUrl>https://github.com/SixtenLabs/Gluten</projectUrl>
-    <iconUrl>http://ICON_URL_HERE_OR_DELETE_THIS_LINE</iconUrl>
+    <iconUrl>https://github.com/SixtenLabs/Gluten/blob/master/Resources/noun_960_cc.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
     <releaseNotes>Summary of changes made in this release of the package.</releaseNotes>
