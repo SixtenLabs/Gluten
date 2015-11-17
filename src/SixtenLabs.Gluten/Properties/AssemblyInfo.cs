@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("SixtenLabs.Gluten")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("Gluten")]
+[assembly: AssemblyDescription("WPF MVVM Framework")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("Sixten Labs")]
 [assembly: AssemblyProduct("SixtenLabs.Gluten")]
-[assembly: AssemblyCopyright("Copyright ©  2015")]
+[assembly: AssemblyCopyright("Copyright © Sixten Labs  2015")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
