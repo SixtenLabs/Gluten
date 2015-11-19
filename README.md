@@ -12,5 +12,4 @@ https://github.com/canton7/Stylet
 which is based on Caliburn.Micro but only the parts that support WPF.
 
 I have been making some major (removed built in IOC) and minor changes to suit my programming style and habits.
-As time goes on I will be adding some documentation. It is currently a work in progress
-and as it matures I will add some documentation.
+It is currently a work in progress and as it matures I will add some documentation.
