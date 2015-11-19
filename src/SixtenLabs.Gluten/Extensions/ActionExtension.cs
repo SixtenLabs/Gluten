@@ -8,32 +8,6 @@ using System.Xaml;
 namespace SixtenLabs.Gluten
 {
 	/// <summary>
-	/// What to do if the given target is null, or if the given action doesn't exist on the target
-	/// </summary>
-	public enum ActionUnavailableBehaviour
-	{
-		/// <summary>
-		/// The default behaviour. What this is depends on whether this applies to an action or target, and an event or ICommand
-		/// </summary>
-		Default,
-
-		/// <summary>
-		/// Enable the control anyway. Clicking/etc the control won't do anything
-		/// </summary>
-		Enable,
-
-		/// <summary>
-		/// Disable the control. This is only valid for commands, not events
-		/// </summary>
-		Disable,
-
-		/// <summary>
-		/// An exception will be thrown when the control is clicked
-		/// </summary>
-		Throw
-	}
-
-	/// <summary>
 	/// MarkupExtension used for binding Commands and Events to methods on the View.ActionTarget
 	/// </summary>
 	public class ActionExtension : MarkupExtension
@@ -98,14 +72,18 @@ namespace SixtenLabs.Gluten
 		public override object ProvideValue(IServiceProvider serviceProvider)
 		{
 			if (Method == null)
+			{
 				throw new InvalidOperationException("Method has not been set");
+			}
 
 			var valueService = (IProvideValueTarget)serviceProvider.GetService(typeof(IProvideValueTarget));
 
 			// Seems this is the case when we're in a template. We'll get called again properly in a second.
 			// http://social.msdn.microsoft.com/Forums/vstudio/en-US/a9ead3d5-a4e4-4f9c-b507-b7a7d530c6a9/gaining-access-to-target-object-instead-of-shareddp-in-custom-markupextensions-providevalue-method?forum=wpf
 			if (!(valueService.TargetObject is DependencyObject))
+			{
 				return this;
+			}
 
 			var targetObject = (DependencyObject)valueService.TargetObject;
 
@@ -113,6 +91,7 @@ namespace SixtenLabs.Gluten
 			var rootObject = rootObjectProvider == null ? null : rootObjectProvider.RootObject as DependencyObject;
 
 			var propertyAsDependencyProperty = valueService.TargetProperty as DependencyProperty;
+
 			if (propertyAsDependencyProperty != null && propertyAsDependencyProperty.PropertyType == typeof(ICommand))
 			{
 				// If they're in design mode and haven't set View.ActionTarget, default to looking sensible
@@ -120,6 +99,7 @@ namespace SixtenLabs.Gluten
 			}
 
 			var propertyAsEventInfo = valueService.TargetProperty as EventInfo;
+
 			if (propertyAsEventInfo != null)
 			{
 				var ec = new EventAction(targetObject, rootObject, propertyAsEventInfo.EventHandlerType, Method, EventNullTargetBehaviour, EventActionNotFoundBehaviour);
@@ -128,9 +108,11 @@ namespace SixtenLabs.Gluten
 
 			// For attached events
 			var propertyAsMethodInfo = valueService.TargetProperty as MethodInfo;
+
 			if (propertyAsMethodInfo != null)
 			{
 				var parameters = propertyAsMethodInfo.GetParameters();
+
 				if (parameters.Length == 2 && typeof(Delegate).IsAssignableFrom(parameters[1].ParameterType))
 				{
 					var ec = new EventAction(targetObject, rootObject, parameters[1].ParameterType, Method, EventNullTargetBehaviour, EventActionNotFoundBehaviour);
@@ -140,41 +122,5 @@ namespace SixtenLabs.Gluten
 
 			throw new ArgumentException("Can only use ActionExtension with a Command property or an event handler");
 		}
-	}
-
-	/// <summary>
-	/// The View.ActionTarget was not set. This probably means the item is in a ContextMenu/Popup
-	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2237:MarkISerializableTypesWithSerializable")]
-	public class ActionNotSetException : Exception
-	{
-		internal ActionNotSetException(string message) : base(message) { }
-	}
-
-	/// <summary>
-	/// The Action Target was null, and shouldn't have been (NullTarget = Throw)
-	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2237:MarkISerializableTypesWithSerializable")]
-	public class ActionTargetNullException : Exception
-	{
-		internal ActionTargetNullException(string message) : base(message) { }
-	}
-
-	/// <summary>
-	/// The method specified could not be found on the Action Target
-	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2237:MarkISerializableTypesWithSerializable")]
-	public class ActionNotFoundException : Exception
-	{
-		internal ActionNotFoundException(string message) : base(message) { }
-	}
-
-	/// <summary>
-	/// The method specified does not have the correct signature
-	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2237:MarkISerializableTypesWithSerializable")]
-	public class ActionSignatureInvalidException : Exception
-	{
-		internal ActionSignatureInvalidException(string message) : base(message) { }
 	}
 }

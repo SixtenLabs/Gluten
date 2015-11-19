@@ -48,11 +48,18 @@
   <ItemGroup>
     <Compile Include="BootstrapperBase.cs" />
     <Compile Include="Collections\BindableCollection.cs" />
+    <Compile Include="Converters\ConverterMarkupExtension.cs" />
+    <Compile Include="Converters\GeometryToImageSourceConverter.cs" />
+    <Compile Include="Enums\ActionUnavailableBehaviour.cs" />
     <Compile Include="Enums\ScreenState.cs" />
     <Compile Include="EventArgs\ActivationEventArgs.cs" />
     <Compile Include="EventArgs\CloseEventArgs.cs" />
     <Compile Include="EventArgs\DeactivationEventArgs.cs" />
     <Compile Include="EventArgs\ScreenStateChangedEventArgs.cs" />
+    <Compile Include="Exceptions\ActionNotFoundException.cs" />
+    <Compile Include="Exceptions\ActionNotSetException.cs" />
+    <Compile Include="Exceptions\ActionSignatureInvalidException.cs" />
+    <Compile Include="Exceptions\ActionTargetNullException.cs" />
     <Compile Include="Exceptions\StyletInvalidViewTypeException.cs" />
     <Compile Include="Exceptions\StyletViewLocationException.cs" />
     <Compile Include="Execute.cs" />
@@ -67,6 +74,7 @@
     <Compile Include="Interfaces\IGuardClose.cs" />
     <Compile Include="Interfaces\IHaveDisplayName.cs" />
     <Compile Include="Interfaces\ILogger.cs" />
+    <Compile Include="Interfaces\IMessageBoxViewModel.cs" />
     <Compile Include="Interfaces\INotifyCollectionChanging.cs" />
     <Compile Include="Interfaces\INotifyPropertyChangedDispatcher.cs" />
     <Compile Include="Interfaces\IObservableCollection.cs" />
@@ -98,7 +106,7 @@
     <Compile Include="Services\WindowManager.cs" />
     <Compile Include="ValidatingModelBase.cs" />
     <Compile Include="Xaml\ActionBase.cs" />
-    <Compile Include="Xaml\ActionExtension.cs" />
+    <Compile Include="Extensions\ActionExtension.cs" />
     <Compile Include="Xaml\ApplicationLoader.cs" />
     <Compile Include="Xaml\BoolToVisibilityConverter.cs" />
     <Compile Include="Xaml\CommandAction.cs" />
