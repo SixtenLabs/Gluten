@@ -45,8 +45,7 @@ namespace SixtenLabs.Gluten
 		/// <summary>
 		/// The object's ActionTarget. This is used to determine what object to call Actions on by the ActionExtension markup extension.
 		/// </summary>
-		public static readonly DependencyProperty ActionTargetProperty =
-				DependencyProperty.RegisterAttached("ActionTarget", typeof(object), typeof(View), new FrameworkPropertyMetadata(InitialActionTarget, FrameworkPropertyMetadataOptions.Inherits));
+		public static readonly DependencyProperty ActionTargetProperty = DependencyProperty.RegisterAttached("ActionTarget", typeof(object), typeof(View), new FrameworkPropertyMetadata(InitialActionTarget, FrameworkPropertyMetadataOptions.Inherits));
 
 		/// <summary>
 		/// Fetch the ViewModel currently associated with a given object
@@ -117,8 +116,12 @@ namespace SixtenLabs.Gluten
 			// No attribute? Try a property called 'Content'...
 			string propertyName = attribute != null ? attribute.Name : "Content";
 			var property = type.GetProperty(propertyName);
+
 			if (property == null)
+			{
 				throw new InvalidOperationException(String.Format("Unable to find a Content property on type {0}. Make sure you're using 's:View.Model' on a suitable container, e.g. a ContentControl", type.Name));
+			}
+
 			property.SetValue(targetLocation, view);
 		}
 	}

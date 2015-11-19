@@ -7,54 +7,6 @@ using System.Reflection;
 namespace SixtenLabs.Gluten
 {
 	/// <summary>
-	/// Marker for types which we might be interested in
-	/// </summary>
-	public interface IHandle
-	{
-	}
-
-	/// <summary>
-	/// Implement this to handle a particular message type
-	/// </summary>
-	/// <typeparam name="TMessageType">Message type to handle. Can be a base class of the messsage type(s) to handle</typeparam>
-	public interface IHandle<in TMessageType> : IHandle
-	{
-		/// <summary>
-		/// Called whenever a message of type TMessageType is posted
-		/// </summary>
-		/// <param name="message">Message which was posted</param>
-		void Handle(TMessageType message);
-	}
-
-	/// <summary>
-	/// Centralised, weakly-binding publish/subscribe event manager
-	/// </summary>
-	public interface IEventAggregator
-	{
-		/// <summary>
-		/// Register an instance as wanting to receive events. Implement IHandle{T} for each event type you want to receive.
-		/// </summary>
-		/// <param name="handler">Instance that will be registered with the EventAggregator</param>
-		/// <param name="channels">Channel(s) which should be subscribed to. Defaults to EventAggregator.DefaultChannel if none given</param>
-		void Subscribe(IHandle handler, params string[] channels);
-
-		/// <summary>
-		/// Unregister as wanting to receive events. The instance will no longer receive events after this is called.
-		/// </summary>
-		/// <param name="handler">Instance to unregister</param>
-		/// <param name="channels">Channel(s) to unsubscribe from. Unsubscribes from everything if no channels given</param>
-		void Unsubscribe(IHandle handler, params string[] channels);
-
-		/// <summary>
-		/// Publish an event to all subscribers, using the specified dispatcher
-		/// </summary>
-		/// <param name="message">Event to publish</param>
-		/// <param name="dispatcher">Dispatcher to use to call each subscriber's handle method(s)</param>
-		/// <param name="channels">Channel(s) to publish the message to. Defaults to EventAggregator.DefaultChannel none given</param>
-		void PublishWithDispatcher(object message, Action<Action> dispatcher, params string[] channels);
-	}
-
-	/// <summary>
 	/// Default implementation of IEventAggregator
 	/// </summary>
 	public class EventAggregator : IEventAggregator
@@ -65,6 +17,7 @@ namespace SixtenLabs.Gluten
 		public static readonly string DefaultChannel = "DefaultChannel";
 
 		private readonly List<Handler> handlers = new List<Handler>();
+
 		private readonly object handlersLock = new object();
 
 		/// <summary>
@@ -76,12 +29,17 @@ namespace SixtenLabs.Gluten
 		{
 			lock (handlersLock)
 			{
-				// Is it already subscribed?
-				var subscribed = handlers.FirstOrDefault(x => x.IsHandlerForInstance(handler));
-				if (subscribed == null)
-					handlers.Add(new Handler(handler, channels)); // Adds default topic if appropriate
+				var isAlreadySubscribed = handlers.FirstOrDefault(x => x.IsHandlerForInstance(handler));
+
+				if (isAlreadySubscribed == null)
+				{
+					// Adds default topic if appropriate
+					handlers.Add(new Handler(handler, channels)); 
+				}
 				else
-					subscribed.SubscribeToChannels(channels);
+				{
+					isAlreadySubscribed.SubscribeToChannels(channels);
+				}
 			}
 		}
 
@@ -95,8 +53,11 @@ namespace SixtenLabs.Gluten
 			lock (handlersLock)
 			{
 				var existingHandler = handlers.FirstOrDefault(x => x.IsHandlerForInstance(handler));
+
 				if (existingHandler != null && existingHandler.UnsubscribeFromChannels(channels)) // Handles default topic appropriately
+				{
 					handlers.Remove(existingHandler);
+				}
 			}
 		}
 
@@ -112,6 +73,7 @@ namespace SixtenLabs.Gluten
 			{
 				var messageType = message.GetType();
 				var deadHandlers = handlers.Where(x => !x.Handle(messageType, message, dispatcher, channels)).ToArray();
+
 				foreach (var deadHandler in deadHandlers)
 				{
 					handlers.Remove(deadHandler);
@@ -137,7 +99,10 @@ namespace SixtenLabs.Gluten
 				}
 
 				if (channels.Length == 0)
+				{
 					channels = new[] { DefaultChannel };
+				}
+
 				SubscribeToChannels(channels);
 			}
 
@@ -155,23 +120,34 @@ namespace SixtenLabs.Gluten
 			{
 				// If channels is empty, unsubscribe from everything
 				if (channels.Length == 0)
+				{
 					return true;
+				}
+
 				this.channels.ExceptWith(channels);
+
 				return this.channels.Count == 0;
 			}
 
 			public bool Handle(Type messageType, object message, Action<Action> dispatcher, string[] channels)
 			{
 				var target = this.target.Target;
+
 				if (target == null)
+				{
 					return false;
+				}
 
 				if (channels.Length == 0)
+				{
 					channels = new[] { DefaultChannel };
+				}
 
 				// We're not subscribed to any of the channels
 				if (!channels.All(x => this.channels.Contains(x)))
+				{
 					return true;
+				}
 
 				foreach (var invoker in invokers)
 				{
@@ -201,36 +177,10 @@ namespace SixtenLabs.Gluten
 			public void Invoke(object target, Type messageType, object message, Action<Action> dispatcher)
 			{
 				if (this.messageType.IsAssignableFrom(messageType))
+				{
 					dispatcher(() => invoker(target, message));
+				}
 			}
-		}
-	}
-
-	/// <summary>
-	/// Extension methods on IEventAggregator, to give more dispatching options
-	/// </summary>
-	public static class EventAggregatorExtensions
-	{
-		/// <summary>
-		/// Publish an event to all subscribers, calling the handle methods on the UI thread
-		/// </summary>
-		/// <param name="eventAggregator">EventAggregator to publish the message with</param>
-		/// <param name="message">Event to publish</param>
-		/// <param name="channels">Channel(s) to publish the message to. Defaults to EventAggregator.DefaultChannel none given</param>
-		public static void PublishOnUIThread(this IEventAggregator eventAggregator, object message, params string[] channels)
-		{
-			eventAggregator.PublishWithDispatcher(message, Execute.OnUIThread, channels);
-		}
-
-		/// <summary>
-		/// Publish an event to all subscribers, calling the handle methods synchronously on the current thread
-		/// </summary>
-		/// <param name="eventAggregator">EventAggregator to publish the message with</param>
-		/// <param name="message">Event to publish</param>
-		/// <param name="channels">Channel(s) to publish the message to. Defaults to EventAggregator.DefaultChannel none given</param>
-		public static void Publish(this IEventAggregator eventAggregator, object message, params string[] channels)
-		{
-			eventAggregator.PublishWithDispatcher(message, a => a(), channels);
 		}
 	}
 }

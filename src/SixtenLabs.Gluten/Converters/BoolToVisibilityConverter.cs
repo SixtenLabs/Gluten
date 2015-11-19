@@ -6,6 +6,8 @@ using System.Windows.Data;
 
 namespace SixtenLabs.Gluten
 {
+	// TODO : Convert this to use MarkupExtensionConverter or kill it.
+
 	/// <summary>
 	/// Turn a boolean value into a Visibility
 	/// </summary>

@@ -11,6 +11,13 @@ namespace SixtenLabs.Gluten
 	public abstract class BootstrapperBase : IBootstrapper, IWindowManagerConfig, IDisposable
 	{
 		/// <summary>
+		/// Initialises a new instance of the <see cref="BootstrapperBase"/> class
+		/// </summary>
+		protected BootstrapperBase()
+		{
+		}
+
+		/// <summary>
 		/// Gets the current application
 		/// </summary>
 		public Application Application { get; private set; }
@@ -26,20 +33,15 @@ namespace SixtenLabs.Gluten
 		protected abstract object RootViewModel { get; }
 
 		/// <summary>
-		/// Initialises a new instance of the <see cref="BootstrapperBase"/> class
-		/// </summary>
-		protected BootstrapperBase()
-		{
-		}
-
-		/// <summary>
 		/// Called by the ApplicationLoader when this bootstrapper is loaded
 		/// </summary>
 		/// <param name="application">Application within which Stylet is running</param>
 		public void Setup(Application application)
 		{
 			if (application == null)
+			{
 				throw new ArgumentNullException("application");
+			}
 
 			Application = application;
 
@@ -88,7 +90,9 @@ namespace SixtenLabs.Gluten
 		/// <summary>
 		/// Hook called after the IoC container has been set up
 		/// </summary>
-		protected virtual void Configure() { }
+		protected virtual void Configure()
+		{
+		}
 
 		/// <summary>
 		/// Launch the root view
@@ -123,28 +127,38 @@ namespace SixtenLabs.Gluten
 		/// <summary>
 		/// Called on application startup. This occur after this.Args has been assigned, but before the IoC container has been configured
 		/// </summary>
-		protected virtual void OnStart() { }
+		protected virtual void OnStart()
+		{
+		}
 
 		/// <summary>
 		/// Called just after the root View has been displayed
 		/// </summary>
-		protected virtual void OnLaunch() { }
+		protected virtual void OnLaunch()
+		{
+		}
 
 		/// <summary>
 		/// Hook called on application exit
 		/// </summary>
 		/// <param name="e">The exit event data</param>
-		protected virtual void OnExit(ExitEventArgs e) { }
+		protected virtual void OnExit(ExitEventArgs e)
+		{
+		}
 
 		/// <summary>
 		/// Hook called on an unhandled exception
 		/// </summary>
 		/// <param name="e">The event data</param>
-		protected virtual void OnUnhandledException(DispatcherUnhandledExceptionEventArgs e) { }
+		protected virtual void OnUnhandledException(DispatcherUnhandledExceptionEventArgs e)
+		{
+		}
 
 		/// <summary>
 		/// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
 		/// </summary>
-		public virtual void Dispose() { }
+		public virtual void Dispose()
+		{
+		}
 	}
 }

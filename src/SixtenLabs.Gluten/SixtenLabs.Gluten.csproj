@@ -63,6 +63,7 @@
     <Compile Include="Exceptions\StyletInvalidViewTypeException.cs" />
     <Compile Include="Exceptions\StyletViewLocationException.cs" />
     <Compile Include="Execute.cs" />
+    <Compile Include="Extensions\EventAggregatorExtensions.cs" />
     <Compile Include="Extensions\ExpressionExtensions.cs" />
     <Compile Include="Extensions\PropertyChangedExtensions.cs" />
     <Compile Include="Extensions\ScreenExtensions.cs" />
@@ -71,7 +72,9 @@
     <Compile Include="Interfaces\IChild.cs" />
     <Compile Include="Interfaces\IConductor.cs" />
     <Compile Include="Interfaces\IDispatcher.cs" />
+    <Compile Include="Interfaces\IEventAggregator.cs" />
     <Compile Include="Interfaces\IGuardClose.cs" />
+    <Compile Include="Interfaces\IHandle.cs" />
     <Compile Include="Interfaces\IHaveDisplayName.cs" />
     <Compile Include="Interfaces\ILogger.cs" />
     <Compile Include="Interfaces\IMessageBoxViewModel.cs" />
@@ -105,15 +108,15 @@
     <Compile Include="Services\ViewManager.cs" />
     <Compile Include="Services\WindowManager.cs" />
     <Compile Include="ValidatingModelBase.cs" />
-    <Compile Include="Xaml\ActionBase.cs" />
+    <Compile Include="Actions\ActionBase.cs" />
     <Compile Include="Extensions\ActionExtension.cs" />
     <Compile Include="Xaml\ApplicationLoader.cs" />
-    <Compile Include="Xaml\BoolToVisibilityConverter.cs" />
-    <Compile Include="Xaml\CommandAction.cs" />
-    <Compile Include="Xaml\DebugConverter.cs" />
-    <Compile Include="Xaml\EqualityConverter.cs" />
-    <Compile Include="Xaml\EventAction.cs" />
-    <Compile Include="Xaml\IconToBitmapSourceConverter.cs" />
+    <Compile Include="Converters\BoolToVisibilityConverter.cs" />
+    <Compile Include="Actions\CommandAction.cs" />
+    <Compile Include="Converters\DebugConverter.cs" />
+    <Compile Include="Converters\EqualityConverter.cs" />
+    <Compile Include="Actions\EventAction.cs" />
+    <Compile Include="Converters\IconToBitmapSourceConverter.cs" />
     <Compile Include="Xaml\View.cs" />
   </ItemGroup>
   <ItemGroup>
